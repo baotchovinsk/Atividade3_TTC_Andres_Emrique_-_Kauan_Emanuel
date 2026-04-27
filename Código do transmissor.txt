@@ -1,0 +1,32 @@
+#include <SPI.h>
+#include <LoRa.h>
+
+int counter = 1;
+
+void setup() {
+  Serial.begin(115200);
+  while (!Serial);
+
+  Serial.println("LoRa Transmissor");
+
+  LoRa.setPins(5, 14, 2); // NSS, RESET, DIO0
+
+  if (!LoRa.begin(915E6)) { // Brasil: 915 MHz
+    Serial.println("Erro ao iniciar LoRa!");
+    while (1);
+  }
+}
+
+void loop() {
+  Serial.print("Enviando pacote: ");
+  Serial.println(counter);
+
+  LoRa.beginPacket();
+  LoRa.print("Mensagem #");
+  LoRa.print(counter);
+  LoRa.endPacket();
+
+  counter++;
+
+  delay(2000); // envia a cada 2s
+}
